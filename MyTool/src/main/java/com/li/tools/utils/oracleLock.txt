@@ -1,0 +1,68 @@
+SELECT…FOR UPDATE 就可以
+
+
+Oracle锁表
+行级锁
+表级锁
+行级锁
+         ---- 行被排他锁定
+         ----在某行的锁被释放之前，其他用户不能修改此行
+         ----使用 commit 或 rollback 命令释放锁
+         ----Oracle 通过使用 INSERT、UPDATE 和 SELECT…FOR UPDATE 语句自动获取行级锁
+SELECT…FOR UPDATE 子句
+―在表的一行或多行上放置排他锁
+―用于防止其他用户更新该行
+―可以执行除更新之外的其他操作
+―select * from goods where gid=1001
+―for update of gname;
+―只有该用户提交事务，其他用户才能够更新gname
+
+FOR UPDATE WAIT 子句 
+―Oracle9i 中的新增功能 
+―防止无限期地等待锁定的行 
+―等待间隔必须指定为数值文字 
+―等待间隔不能是表达式、赋值变量或 PL/SQL
+变量 
+―select * from goods where gid=1001 for update of gname wait        3 
+―等待用户释放更新锁的时间为3秒，否则超时。
+•表级锁
+―保护表的数据
+―在多个用户同时访问数据时确保数据的完整性
+―可以设置为三种模式：共享、共享更新和 排他
+          语法：lock table<table_name>in<mode>;
+共享锁
+―锁定表
+―仅允许其他用户执行查询操作
+―不能插入、更新和删除
+―多个用户可以同时在同一表中放置此锁
+―lock table table_name
+―in share mode [nowait];
+― rollback 和commit 命令释放锁
+― nowait 关键字告诉其他用户不用等待
+共享更新锁
+―锁定要被更新的行
+―允许其他用户同时查询、插入、更新未被锁定的行
+―在 SELECT 语句中使用“FOR UPDATE”子句，可以强制使用共享更新锁
+―允许多个用户同时锁定表的不同行
+加锁的两种方法
+            lock table tab_name in share update mode;
+            select column1,column2
+            from goods
+            where goods
+            where gid=1001
+            for update of column1,column2
+排他锁
+―与其他两种锁相比，排他锁是限制性最强的表锁
+―仅允许其他用户查询数据
+―不允许执行插入、删除和更新操作
+―在同一时间仅允许一位用户在表上放置排他锁
+―共享锁与此相反
+
+         lock table tab_name in exclusive mode;
+         lock table<表名>[<表名>]...
+                   in share mode [nowait]
+   
+         lock table< 表名>[<表名>]...
+         in exclusive mode [nowait]
+         lock table<表名>[<表名>]...
+         in share update mode[nowait]
