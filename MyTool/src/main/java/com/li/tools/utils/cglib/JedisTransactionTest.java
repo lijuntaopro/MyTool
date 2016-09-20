@@ -15,8 +15,8 @@ public class JedisTransactionTest {
 //		bean.test("hello1");
 		logger.debug("hello");
 		System.out.println("---------------------------------------华丽的分隔线----------------------");
-//		bean.set("hello4",1000);
-//		redisServiceProxy.set("hello3",1000);
+//		bean.set("hello",1000);
+		redisServiceProxy.set("hello1",1000);
 		System.out.println(bean.get("hello"));
 //		System.out.println(redisServiceProxy.get("lijuntao_test_hello1"));
 	}
