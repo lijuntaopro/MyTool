@@ -21,7 +21,7 @@ import com.li.tools.utils.jedis.datacache.CacheSet;
 public class DaoSerializeUtil {
     /***			用于redis中Map的操作：开始行				***/
     //用于存放map到redis时，把键值序列化
-    public static <T extends CacheEntity<?>> Map<byte[],byte[]> cacheSetToMap(CacheSet<T> cacheSet){
+    public static Map<byte[],byte[]> cacheSetToMap(CacheSet<CacheEntity<?>> cacheSet){
 	Map<byte[],byte[]> map = new HashMap<byte[],byte[]>();
 	for(CacheEntity<?> entity:cacheSet.getEntitySet()){
 	    Object id = entity.getId();
@@ -86,7 +86,7 @@ public class DaoSerializeUtil {
 	    return null;
 	List<byte[][]> list = new ArrayList<byte[][]>();
 	int m = (co.size()-1)/k;
-	int n = co.size()%k;
+	int n = co.size()%k==0?k:co.size()%k;
 	Iterator<?> iterator = co.iterator();
 	for(int i=0;i<=m;i++){
 	    int length = 0;
@@ -99,6 +99,30 @@ public class DaoSerializeUtil {
 		if(iterator.hasNext())
 		    bss[j] = SerializeUtil.serialize(iterator.next());
 	    list.add(bss);
+	}
+	return list;
+    }
+    public static <T extends CacheEntity<?>> List<Map<byte[],byte[]>> cacheSetToListMap(CacheSet<T> cacheSet,int k){
+	Set<T> co = cacheSet.getEntitySet();
+	if(co==null||co.size()==0)
+	    return null;
+	List<Map<byte[],byte[]>> list = new ArrayList<Map<byte[],byte[]>>();
+	int m = (co.size()-1)/k;
+	int n = co.size()%k==0?k:co.size()%k;
+	Iterator<?> iterator = co.iterator();
+	for(int i=0;i<=m;i++){
+	    int length = 0;
+	    if(i==m)
+		length = n;
+	    else
+		length = k;
+	    Map<byte[],byte[]> map = new HashMap<byte[],byte[]>();
+	    for(int j=0;j<length;j++)
+		if(iterator.hasNext()){
+		    T object = (T) iterator.next();
+		    map.put(SerializeUtil.serialize(object.getId()),SerializeUtil.serialize(object));
+		}
+	    list.add(map);
 	}
 	return list;
     }

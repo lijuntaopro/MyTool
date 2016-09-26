@@ -12,6 +12,7 @@ import com.li.tools.utils.jedis.datacache.CacheSet;
  * @date 2016-9-19
  */
 public interface ICacheEntityDao<T>{
+    public final static int SAVE_ONCE_ENTITY_MAX = 10000;
     public <K extends CacheEntity<?>> String save(Jedis jedis,String key,CacheSet<K> cacheSet);
     public <K extends CacheEntity<?>> Set<K> get(Jedis jedis,String key,Class<K> class1);
 }

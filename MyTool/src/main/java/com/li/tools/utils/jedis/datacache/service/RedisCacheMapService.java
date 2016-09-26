@@ -16,7 +16,7 @@ import com.li.tools.utils.jedis.datacache.dao.RedisMapDao;
 public class RedisCacheMapService extends RedisCacheService<RedisMapDao>{
     @Resource(name="iCacheEntityDao")
     private RedisMapDao redisMapDao;
-    public <T extends CacheEntity<?>> Set<T> getSomeValuesBykeysInHashMap(String key,Object[] mapKeys,Class<T> class1){
+    public <T extends CacheEntity<?>> Set<T> getSomeValuesBykeys(String key,Object[] mapKeys,Class<T> class1){
 	Set<T> set = null;
 	Jedis jedis2 = pool.getResource();
 	try{
@@ -58,7 +58,7 @@ public class RedisCacheMapService extends RedisCacheService<RedisMapDao>{
      * @return
      * 从redis获取map全部的key值
      */
-    public <T extends CacheEntity<K>,K> Set<K> getAllKeysCacheSetInHashMap(String key,Class<T> class1){
+    public <T extends CacheEntity<K>,K> Set<K> getAllKeys(String key,Class<T> class1){
 	Set<K> set2 = null;
 	Jedis jedis2 = pool.getResource();
 	try{
@@ -79,7 +79,7 @@ public class RedisCacheMapService extends RedisCacheService<RedisMapDao>{
      * @return
      * 从redis获取map全部的values值
      */
-    public <T extends CacheEntity<?>> Set<T> getAllValuesCacheSetInHashMap(Jedis jedis,String key,Class<T> class1){
+    public <T extends CacheEntity<?>> Set<T> getAllValues(String key,Class<T> class1){
 	Set<T> set2 = null;
 	Jedis jedis2 = pool.getResource();
 	try{
@@ -99,7 +99,7 @@ public class RedisCacheMapService extends RedisCacheService<RedisMapDao>{
      * @return
      * 从redis获取map的长度
      */
-    public long getMapLengthInHashMap(Jedis jedis,String redisKey){
+    public long getMapLength(String redisKey){
 	Jedis jedis2 = pool.getResource();
 	long length = 0L;
 	try{
@@ -119,7 +119,7 @@ public class RedisCacheMapService extends RedisCacheService<RedisMapDao>{
      * @return
      * 判断redis获取某个map里的键(redis称其为field)是否存在
      */
-    public boolean exitMapKey(Jedis jedis,String redisKey,String mapKey){
+    public boolean exitMapKey(String redisKey,String mapKey){
 	Jedis jedis2 = pool.getResource();
 	try{
 	    return redisMapDao.existsMapKeyInHashMap(jedis2, redisKey, mapKey);

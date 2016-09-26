@@ -31,8 +31,12 @@ public class RedisMapDao implements ICacheEntityDao<RedisMapDao>{
      * 把cacheSet存放在redis的map集合
      */
     public <T extends CacheEntity<?>> String save(Jedis jedis,String key,CacheSet<T> cacheSet){
-	Map<byte[],byte[]> map = DaoSerializeUtil.cacheSetToMap(cacheSet);
-	return jedis.hmset(SerializeUtil.serialize(key),map);
+	List<Map<byte[],byte[]>> list = DaoSerializeUtil.cacheSetToListMap(cacheSet,ICacheEntityDao.SAVE_ONCE_ENTITY_MAX);
+	String string = "";
+	for(Map<byte[],byte[]> map:list){
+	    string = jedis.hmset(SerializeUtil.serialize(key),map);
+	}
+	return string;
     }
     public <T extends CacheEntity<?>> Set<T> get(Jedis jedis,String key,Class<T> class1){
 	return getAllValuesCacheSetInHashMap(jedis,key,class1);
