@@ -1,0 +1,107 @@
+package com.li.tools.utils.jedis.datacache.template;
+
+import java.util.Set;
+
+import redis.clients.jedis.Jedis;
+
+import com.li.tools.utils.jedis.datacache.operater.JedisSetOperater;
+
+/**
+ * @author lijuntao
+ * @date 2016-9-27
+ */
+public class JedisSetTemplate {
+    private JedisSetOperater jedisSetOperater = new JedisSetOperater();
+    public long add(Jedis jedis,String key,String... values){
+	return jedisSetOperater.add(ThreadLocalPool.thresdJedis.get(),key, values);
+    }
+    public long add(Jedis jedis,byte[] key,byte[]... values){
+	return jedisSetOperater.add(ThreadLocalPool.thresdJedis.get(),key, values);
+    }
+    public long size(Jedis jedis,String key){
+	return jedisSetOperater.size(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public long size(Jedis jedis,byte[] key){
+	return jedisSetOperater.size(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public boolean isContained(Jedis jedis,String key,String value){
+   	return jedisSetOperater.isContained(ThreadLocalPool.thresdJedis.get(),key, value);
+    }
+    public boolean isContained(Jedis jedis,byte[] key,byte[] value){
+	return jedisSetOperater.isContained(ThreadLocalPool.thresdJedis.get(),key, value);
+    }
+    public Set<String> getAllValues(Jedis jedis,String key){
+	return jedisSetOperater.getAllValues(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public Set<byte[]> getAllValues(Jedis jedis,byte[] key){
+	return jedisSetOperater.getAllValues(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public long moveToAnotherList(Jedis jedis,String key,String targetkey,String value){
+	return jedisSetOperater.moveToAnotherList(ThreadLocalPool.thresdJedis.get(),key, targetkey, value);
+    }
+    public long moveToAnotherList(Jedis jedis,byte[] key,byte[] targetkey,byte[] value){
+	return jedisSetOperater.moveToAnotherList(ThreadLocalPool.thresdJedis.get(),key, targetkey, value);
+    }
+    public String popRandomValue(Jedis jedis,String key){
+	return jedisSetOperater.popRandomValue(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public byte[] popRandomValue(Jedis jedis,byte[] key){
+	return jedisSetOperater.popRandomValue(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public String getRandomValues(Jedis jedis,String key){
+	return jedisSetOperater.getRandomValues(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public byte[] getRandomValues(Jedis jedis,byte[] key){
+	return jedisSetOperater.getRandomValues(ThreadLocalPool.thresdJedis.get(),key);
+    }
+    public long removeByValues(Jedis jedis,String key,String... values){
+	return jedisSetOperater.removeByValues(ThreadLocalPool.thresdJedis.get(),key, values);
+    }
+    public long removeByValues(Jedis jedis,byte[] key,byte[]... values){
+	return jedisSetOperater.removeByValues(ThreadLocalPool.thresdJedis.get(),key, values);
+    }
+    //未实现
+    public long getByMatch(Jedis jedis,String key){
+	return 0;
+    }
+    /****			两个集合之间的操作			***/
+    //求差集 ，相当于key1 - key2 -......
+    public Set<String> diff(Jedis jedis,String... keys){
+	return jedisSetOperater.diff(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public Set<byte[]> diff(Jedis jedis,byte[]... keys){
+	return jedisSetOperater.diff(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public long diffStore(Jedis jedis,String targetKey,String... keys){
+	return jedisSetOperater.diffStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+    public long diffStore(Jedis jedis,byte[] targetKey,byte[]... keys){
+	return jedisSetOperater.diffStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+    //求交集
+    public Set<String> inter(Jedis jedis,String... keys){
+	return jedisSetOperater.inter(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public Set<byte[]> inter(Jedis jedis,byte[]... keys){
+	return jedisSetOperater.inter(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public long interStore(Jedis jedis,String targetKey,String... keys){
+	return jedisSetOperater.interStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+    public long interStore(Jedis jedis,byte[] targetKey,byte[]... keys){
+	return jedisSetOperater.interStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+    //求并集
+    public Set<String> union(Jedis jedis,String... keys){
+	return jedisSetOperater.union(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public Set<byte[]> union(Jedis jedis,byte[]... keys){
+	return jedisSetOperater.union(ThreadLocalPool.thresdJedis.get(),keys);
+    }
+    public long unionStore(Jedis jedis,String targetKey,String... keys){
+	return jedisSetOperater.unionStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+    public long unionStore(Jedis jedis,byte[] targetKey,byte[]... keys){
+	return jedisSetOperater.unionStore(ThreadLocalPool.thresdJedis.get(),targetKey, keys);
+    }
+}

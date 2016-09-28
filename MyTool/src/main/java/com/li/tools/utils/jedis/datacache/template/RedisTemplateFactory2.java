@@ -13,36 +13,43 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 public class RedisTemplateFactory2 implements MethodInterceptor{
-    	private RedisStringTemplate redisStringTemplate;
 //    	private static MethodInterceptor methodInterceptor;
+    	private Object template;
         private JedisPool pool = RedisPoolUtil.getInstance();
 	private Pointcut pointcut;
 	private TransactionManager transactionManager;
 	private boolean pointcutNotNullFlag = false;
 	private boolean transactionManagerNotNullFlag = false;
-	public <T> T getTemplate(){
+	public <T> T getTemplate(Class<?> class1){
 		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(RedisStringTemplate.class);
-		if(redisStringTemplate==null)
-		    redisStringTemplate = new RedisStringTemplate();
+		enhancer.setSuperclass(class1);
+		try {
+		    template = class1.newInstance();
+		} catch (InstantiationException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (IllegalAccessException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 		enhancer.setCallback(this);
 		T object = (T) enhancer.create();
 		return object;
 	}
-	public <T> T getTemplate(T obj,Pointcut p){
+	public <T> T getTemplate(Class<?> class1,T obj,Pointcut p){
 		if(p!=null)
 			pointcutNotNullFlag = true;
 		pointcut = p;
-		return getTemplate();
+		return getTemplate(class1);
 	}
-	public <T> T getTemplate(T obj,Pointcut p,TransactionManager t){
+	public <T> T getTemplate(Class<?> class1,T obj,Pointcut p,TransactionManager t){
 		pointcut = p;
 		transactionManager = t;
 		if(p!=null)
 			pointcutNotNullFlag = true;
 		if(t!=null)
 			transactionManagerNotNullFlag = true;
-		return getTemplate();
+		return getTemplate(class1);
 	}
 	/**
 	 * param : obj是this对象
@@ -57,7 +64,7 @@ public class RedisTemplateFactory2 implements MethodInterceptor{
 		ThreadLocalPool.thresdJedis.set(jedis2);
 		Object invoke = null;
 		try{
-		    invoke = method.invoke(redisStringTemplate, args);
+		    invoke = method.invoke(template, args);
 		}catch(Exception e){
 		    System.out.println("RedisTemplateProxy执行出错.");
 		    e.printStackTrace();

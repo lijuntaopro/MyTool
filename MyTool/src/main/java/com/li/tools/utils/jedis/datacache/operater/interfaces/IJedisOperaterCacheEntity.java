@@ -1,4 +1,4 @@
-package com.li.tools.utils.jedis.datacache.operater;
+package com.li.tools.utils.jedis.datacache.operater.interfaces;
 
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import redis.clients.jedis.Jedis;
  * @date 2016-9-20
  */
 @Component("jedisStringOperater")
-public interface IJedisOperater{
+public interface IJedisOperaterCacheEntity{
     public <T extends CacheEntity<?>> Set<T> getCacheEntitySet(Jedis jedis,String key,Class<T> class1);
     public <T extends CacheEntity<?>> String saveCacheEntitySet(Jedis jedis, String key,Set<T> set);
 }

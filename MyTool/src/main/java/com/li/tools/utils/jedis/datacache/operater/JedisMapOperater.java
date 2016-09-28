@@ -8,7 +8,7 @@ import redis.clients.jedis.Jedis;
  * @author lijuntao
  * @date 2016-9-23
  */
-public class JedisMapOperater{
+public class JedisMapOperater extends JedisOperaterBase{
     public long set(Jedis jedis,String key,String field,String value){
 	return jedis.hset(key, field, value);
     }
