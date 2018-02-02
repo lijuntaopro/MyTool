@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECharts单文件引入 -->
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    <script data-require-id="echarts/chart/line" src="http://echarts.baidu.com/build/dist/chart/line.js"></script>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        
+        var newData = null;
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('main')); 
+                
+                newData = {
+				    "code": "200",
+				    "desc": "操作成功",
+				    "data": {
+				        "legendDataList": [],
+				        "xAxis": {
+				            "type": "category",
+				            "max": null,
+				            "min": null,
+				            "data": [
+				                "2014-10-20 14:33",
+				                "2014-10-20 16:53",
+				                "2014-11-24 12:22",
+				                "2014-11-24 16:53",
+				                "2014-12-22 12:40",
+				                "2014-12-22 17:23"
+				            ]
+				        },
+				        "yAxis": {
+				            "type": "value",
+				            "max": 5.62,
+				            "min": 3.1,
+				            "data": []
+				        },
+				        "series": {
+				            "name": "钾",
+				            "data": [
+				                5.01,
+				                3.84,
+				                5.17,
+				                3.75,
+				                5.33,
+				                3.39
+				            ]
+				        },
+				        "units": "mmol/L",
+				        "rangeMax": 5.3,
+				        "rangeMin": 3.5
+				    }
+				};
+				
+				newData = {
+    "code": "200",
+    "desc": "操作成功",
+    "data": {
+        "legendDataList": [],
+        "xAxis": {
+            "type": "category",
+            "max": null,
+            "min": null,
+            "data": [
+                "2013-12-10 15:38",
+                "2013-12-10 15:39"
+            ]
+        },
+        "yAxis": {
+            "type": "category",
+            "max": null,
+            "min": null
+        },
+        "series": {
+            "name": "丙型肝炎抗体测定(Anti-HCV)定性",
+            "data": [
+                '阴性',
+                '阳性'
+            ]
+        },
+        "units": null,
+        "rangeMax": null,
+        "rangeMin": null
+    }
+};
+				
+				if(newData.data == null)
+					return false;
+				var titleSubtext = "单位：";
+				titleSubtext += newData.data.units == null?'无':newData.data.units;
+				if(newData.data.rangeMin && newData.data.rangeMax)
+					titleSubtext += ' 范围：' + newData.data.rangeMin + "~" + newData.data.rangeMax;
+				var yAxisElement = setyAxis(newData);
+					
+				var markLineData = [];
+				if(newData.data.rangeMax)
+					markLineData.push([
+				                         {name: '最高范围值' + newData.data.rangeMax, xAxis: -1, yAxis: newData.data.rangeMax},
+				                      	 {xAxis: 100000, yAxis: newData.data.rangeMax}
+				                    ]);
+				if(newData.data.rangeMin)
+					markLineData.push([
+				                         {name: '最低范围值' + newData.data.rangeMin, xAxis: -1, yAxis: newData.data.rangeMin},
+				                      	 {xAxis: 100000, yAxis: newData.data.rangeMin}
+				                    ]);
+				
+                option = {
+				    title : {
+				        subtext: titleSubtext
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:[newData.data.series.name+"-曲线图"]
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            boundaryGap : true,
+				            data : newData.data.xAxis.data
+				        }
+				    ],
+				    yAxis : [
+				        yAxisElement
+				    ],
+				    series : [
+				        {
+				            name:newData.data.series.name,
+				            type:'line',
+				            data:newData.data.series.data,
+				        }
+				    ]
+				};
+        
+                // 为echarts对象加载数据 
+                myChart.setOption(option); 
+            }
+        );
+        var newSeriesValue = [];
+        
+        function setyAxis(newData){
+        	var yAxisElement = {type : newData.data.yAxis.type};
+        	if(newData.data.yAxis.type == 'value'){
+				if(newData.data.yAxis.max)
+					yAxisElement.max = newData.data.yAxis.max
+				if(newData.data.yAxis.min)
+					yAxisElement.min = newData.data.yAxis.min
+        	}else{
+				var seriesData = newData.data.series.data;
+				var yAxisElementData = [];
+				var newSeriesData = [];
+				var size = 0;
+				for(var i=0;seriesData.length;i++){
+					var index = newSeriesData[seriesData[i]];
+					if(index == null){
+						newSeriesData[seriesData[i]] = size;
+						newSeriesValue.push(seriesData[i]);
+						index = size++;
+					}
+					newSeriesData.push(index);
+				}
+				newData.data.series.data = newSeriesData;
+				yAxisElement.data = yAxisElementData;
+				yAxisElement.axisLabel = {
+				    formatter: 'newSeriesValue[{value}] km'
+				}
+        	}
+        }
+    </script>
+</body>

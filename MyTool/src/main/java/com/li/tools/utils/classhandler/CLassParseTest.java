@@ -8,8 +8,8 @@ import javax.tools.ToolProvider;
  * @date 2016-9-24
  */
 public class CLassParseTest {
-    public static void main(String[] args) {
-	JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
-	javaCompiler.hashCode();
-    }
+	public static void main(String[] args) {
+		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
+		javaCompiler.hashCode();
+	}
 }
