@@ -6,16 +6,15 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.li.tools.utils.CommonUtils;
+
 public class BackTrack {
 	
-	public void testRecursion(){
-		
-	}
-	
-	public void testPrimeRing(){
-		
-	}
-	
+	/**
+	 * 素数环递归算法
+	 * author lijuntao
+	 * date 2018年2月2日
+	 */
 	public List<int[]> primeRing(int n){
 		List<int[]> list = new ArrayList<int[]>();
 		if(n < 2 || n%2 == 1)
@@ -48,46 +47,120 @@ public class BackTrack {
 		}
 	}
 	
-	private void nEn(int n){
-		int i = 1;
-		while(i <= n){
-			for(int j=0; j<n; j++){
-				
-			}
-			i++;
+	/**
+	 * m^n循环， n层循环
+	 * author lijuntao
+	 * date 2018年2月5日
+	 */
+	public List<int[]> mEn(int m, int n){
+		List<int[]> list = new ArrayList<int[]>();
+		int[] arrs = new int[n];
+		for(int i=0; i<n; i++){
+			arrs[i] = 1;
 		}
+		int cenci = 0;
+		while(true){
+			for(int j=1; j<=m; j++){
+				arrs[n - 1] = j;
+				int[] copy = new int[n];
+				System.arraycopy(arrs, 0, copy, 0, n);
+				list.add(copy);
+			}
+			cenci = n;
+			while(cenci - 2 >= 0){
+				if(arrs[cenci - 2] != m){
+					arrs[cenci - 2]++;
+					break;
+				}
+				arrs[cenci - 2] = 1;
+				cenci--;
+			}
+			if(cenci - 2 < 0){
+				break;
+			}
+		}
+		return list;
 	}
 	
 	/**
-	 * 素数环递推算法
+	 * m^n循环， n层循环, m不重复 == Cmn
 	 * author lijuntao
-	 * date 2018年2月2日
+	 * date 2018年2月5日
 	 */
-	private List<int[]> primeRing2(int i, List<int[]> list) {
-		if(i%2 == 1 || i < 2){
-			return new ArrayList<int[]>();
+	public List<int[]> mEnNoRepeat(int m, int n){
+		List<int[]> list = new ArrayList<int[]>();
+		if(m < n){
+			return list;
 		}
-		if(i == 2){
-			list.add(new int[]{1, 2});
-			list.add(new int[]{2, 1});
-		}
-		List<int[]> list2 = primeRing2(i - 2, list);
-		List<int[]> newList =new ArrayList<int[]>();
-		for(int[] arrs : list2){
-			for(int j=0; j<i-2; j++){
-				for(int k=0; k<i-1; k++){
-					if(j == 0){
-						int m = arrs[0];
-						int n = arrs[arrs.length - 1];
-					}else if(j != i - 2){
-						int m = arrs[j - 1];
-						int n = arrs[j];
+		int cenci = 1;
+		int[] arrs = new int[n];
+		boolean[] repeatCheck = new boolean[m+1];
+		while(true){
+			/**
+			 * 第1 --> n-1构造
+			 */
+			for(int i=cenci-1; i< n - 1; i++){
+				for(int j=1; j<m; j++){
+					if(!repeatCheck[j]){
+						arrs[i] = j;
+						repeatCheck[j] = true;
+						break;
 					}
-							
 				}
 			}
+			
+			/**
+			 * 第n次构造
+			 */
+			for(int j=1; j<=m; j++){
+				if(!repeatCheck[j]){
+					arrs[n - 1] = j;
+					int[] copy = new int[n];
+					System.arraycopy(arrs, 0, copy, 0, n);
+					list.add(copy);
+				}
+			}
+			
+			/**
+			 * 由第n列，不断退位
+			 */
+			cenci = n;
+			a:while(cenci - 2 >= 0){
+				repeatCheck[arrs[cenci - 2]] = false;
+				for(int j = arrs[cenci - 2] + 1; j <= m; j++){
+					if(!repeatCheck[j]){
+						repeatCheck[j] = true;
+						arrs[cenci - 2] = j;
+						break a;
+					}
+				}
+				cenci--;
+			}
+			
+			/**
+			 * 如果第一列也退位了，证明已经循环完了
+			 */
+			if(cenci - 2 < 0){
+				break;
+			}
 		}
-		return null;
+		return list;
+	}
+	
+	@Test
+	public void test1(){
+		List<int[]> list = mEn(3, 3);
+		for(int[] arrs : CommonUtils.nullToEmpty(list)){
+			System.out.println(Arrays.toString(arrs));
+		}
+	}
+	
+	@Test
+	public void test2(){
+		List<int[]> list = mEnNoRepeat(4, 2);
+		for(int[] arrs : CommonUtils.nullToEmpty(list)){
+			System.out.println(Arrays.toString(arrs));
+		}
 	}
 	
 	@Test
@@ -96,6 +169,15 @@ public class BackTrack {
 		for(int[] arrs : list){
 			System.out.println(Arrays.toString(arrs));
 		}
+	}
+	
+	/**
+	 * 素数环递推算法
+	 * author lijuntao
+	 * date 2018年2月2日
+	 */
+	public List<int[]> primeRing2(int i, List<int[]> list) {
+		return null;
 	}
 
 	public boolean isPrime(int i) {
